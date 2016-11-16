@@ -11,9 +11,21 @@
   function NarrowItDownController(MenuSearchService){
       var menu = this;
       menu.searchTerm = "";
-      menu.items = [];
       menu.findMatchedItems = function(){
-        menu.items = MenuSearchService.getMatchedMenuItems(menu.searchTerm);
+        menu.message = "";
+        menu.items = "";
+        if(menu.searchTerm == "")
+          menu.message = "Nothing found";
+        else {
+          var ret = MenuSearchService.getMatchedMenuItems(menu.searchTerm);
+          menu.items = MenuSearchService.getMatchedMenuItems(menu.searchTerm);
+          ret.then(function(response){
+            menu.items = response;
+            if(response.length == 0)
+              menu.message = "Nothing found";
+          });
+        }
+
       }
 
       menu.onRemove = function(index){
@@ -44,11 +56,11 @@
     var service = this;
 
     service.getMatchedMenuItems = function(searchTerm){
-      var foundItems = [];
-      $http({
+      return $http({
         method: "GET",
         url: ApiBasePath + "/menu_items.json"
       }).then(function (result) {
+        var foundItems = [];
         // process result and only keep items that match
         var menuItems = result.data.menu_items;
         var i;
@@ -56,9 +68,9 @@
             if(menuItems[i].description.toLowerCase().indexOf(searchTerm) != -1)
               foundItems.push(menuItems[i]);
         }
-
+        return foundItems;
       });
-      return foundItems;
+
     };
 
   }

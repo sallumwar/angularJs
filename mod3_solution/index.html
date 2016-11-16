@@ -18,6 +18,10 @@
     <div class="form-group narrow-button">
       <button class="btn btn-primary" ng-click="menu.findMatchedItems();">Narrow It Down For Me!</button>
     </div>
+
+    <div class="col-md-12">
+    {{menu.message}}
+  </div>
     <div class="col-md-12">
       <!-- found-items should be implemented as a component -->
       <found-items items="menu.items" on-remove="menu.onRemove(index)"></found-items>
